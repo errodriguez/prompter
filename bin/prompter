@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# prompter version 0.1
+# Eduardo René Rodríguez Ávila (c) 2025 
+
 PROMPTS=prompts
 CONFIG=config
 ROOT=$(dirname $(dirname $0))
