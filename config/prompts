@@ -1,0 +1,6 @@
+# Colorized prompt
+LINUX="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
+# host PWD user
+DEFAULT="\h:\W \u\$ "
+#24 hr clock
+24CLK="\t 󰜴 "

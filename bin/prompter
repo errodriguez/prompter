@@ -1,0 +1,73 @@
+#! /usr/bin/env bash
+
+PROMPTS=prompts
+CONFIG=config
+ROOT=$(dirname $(dirname $0))
+OPTIONS=":hl"
+UNKNOWN="$ "
+
+function Usage() {
+  cat <<EOS
+
+Usage: $(basename $0) ([-h|l] | prompt-name)
+
+  -h   This help.
+  -l   List all available prompts and its description.
+
+To change your PS1 prompt, just:
+
+  PS1=\$(prompter <prompt-name>)
+ 
+where <prompt-name> is one of the names show by -l option. <prompt-name> is
+case-insensitive. For unknown <prompt-names> a default "$ " prompt is set.
+
+EOS
+}
+
+function List() {
+  awk -F= '{
+    description=substr($0, 2)
+    getline
+    print $1,"-",description
+  }' $ROOT/$CONFIG/$PROMPTS
+}
+
+function Select(){
+   awk -F'["=]+' -v p=$1 'p==$1 {
+       print $2
+       exit
+  }' $ROOT/$CONFIG/$PROMPTS
+}
+
+#=============================================================================#
+#                                    Prompter                                 #
+#=============================================================================#
+
+while getopts $OPTIONS opt
+do
+  case $opt in
+       h) Usage 
+          exit 0
+          ;;
+       l) List
+          exit 0
+          ;;
+      \?) printf "unknown option: -%s\n" $OPTARG
+          Usage
+          exit 10
+          ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+if [ $# -eq 0 ]
+   then Usage
+        exit 1
+fi 
+
+prompt=$(Select ${1^^})
+if [[ "$prompt" == "" ]]
+   then echo -n "$UNKNOWN"
+   else echo -n "$prompt"
+fi
