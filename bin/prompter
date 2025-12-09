@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# prompter version 0.1
+# prompter version 0.2
 # Eduardo René Rodríguez Ávila (c) 2025 
 
 PROMPTS=prompts
@@ -28,11 +28,21 @@ EOS
 }
 
 function List() {
-  awk -F= '{
-    description=substr($0, 2)
-    getline
-    print $1,"-",description
-  }' $ROOT/$CONFIG/$PROMPTS
+  awk -F= '
+    /^#=/ {
+        skip = ! skip
+        print
+        next
+    }
+    skip == 1 {
+        print
+        next
+    }
+    {
+        description=substr($0, 2)
+        getline
+        print $1,"-",description
+    }' $ROOT/$CONFIG/$PROMPTS
 }
 
 function Select(){
